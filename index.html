@@ -83,18 +83,18 @@ const files = [
 ];
 
 const grid = document.getElementById("grid");
-let audio = new Audio(file);
+let audio = null;
 
-files.forEach((file, index) => {
+files.forEach((file) => {
   const button = document.createElement("button");
 
   button.className = "button";
-  button.textContent = file;
+  button.textContent = file.replace("mp3/", "");
 
   button.addEventListener("click", () => {
     if (audio !== null) return;
 
-    audio = new Audio("mp3/" + file);
+    audio = new Audio(file);
 
     const buttons = document.querySelectorAll(".button");
     buttons.forEach(b => {
