@@ -1,191 +1,157 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>雨穴素材集</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 16px;
-  font-family: sans-serif;
-  background: #f5f5f5;
-}
-
-#loading {
-  text-align: center;
-  font-size: 18px;
-  padding: 30px 10px;
-}
-
-.grid {
-  display: none;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.button {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  font-size: 14px;
-  padding: 8px;
-  word-break: break-all;
-  overflow-wrap: anywhere;
-  cursor: pointer;
-}
-
-.button:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-.button:disabled {
-  opacity: 1;
-  cursor: not-allowed;
-}
-
-@media (min-width: 700px) {
-  .grid {
-    max-width: 700px;
-  }
-
-  .button {
-    font-size: 16px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div id="loading">音声を読み込んでいます……</div>
-<div class="grid" id="grid"></div>
-
-<script>
-const files = [
-  "mp3/ありがとうございました.mp3",
-  "mp3/あれぇ.mp3",
-  "mp3/うーん、どこがへんなのかなぁ？.mp3",
-  "mp3/え、お前天才か！？.mp3",
-  "mp3/ここ、なんなんだろう.mp3",
-  "mp3/ここは一度私の知り合いの建築技師さんの栗原さんに電話してみようと思います.mp3",
-  "mp3/これは一発でヤバいとわかりますぅ.mp3",
-  "mp3/じゃあこれはダメでぇ.mp3",
-  "mp3/たしかに冷静に考えたらですけど.mp3",
-  "mp3/リビング細いね.mp3",
-  "mp3/テレビ置きづらいね.mp3",
-  "mp3/大丈夫ぅ.mp3",
-  "mp3/栗原ぁぁ！.mp3",
-  "mp3/窓無ぁぁい！.mp3",
-  "mp3/窓無いですよ.mp3"
-];
-
-const grid = document.getElementById("grid");
-const loading = document.getElementById("loading");
-
-const audios = [];
-let currentAudio = null;
-
-// 全MP3を先読みする
-function preloadAudio(file) {
-  return new Promise((resolve, reject) => {
-    const audio = new Audio();
-
-    audio.preload = "auto";
-
-    audio.addEventListener("canplaythrough", () => {
-      resolve(audio);
-    }, { once: true });
-
-    audio.addEventListener("error", () => {
-      reject(file);
-    }, { once: true });
-
-    audio.src = file;
-    audio.load();
-  });
-}
-
-// 全MP3の読み込み
-Promise.all(
-  files.map(file => preloadAudio(file))
-)
-.then(loadedAudios => {
-  // 読み込んだAudioを保存
-  loadedAudios.forEach((audio, index) => {
-    audios[index] = audio;
-  });
-
-  // ボタンを作成
-  files.forEach((file, index) => {
-    const button = document.createElement("button");
-
-    button.className = "button";
-    button.textContent = file.replace("mp3/", "").replace(".mp3","");
-
-    button.addEventListener("click", () => {
-      if (currentAudio !== null) return;
-
-      const audio = audios[index];
-      currentAudio = audio;
-
-      const buttons = document.querySelectorAll(".button");
-
-      // 全ボタンを無効化
-      buttons.forEach(b => {
-        b.disabled = true;
-      });
-
-      // 最初から再生
-      audio.currentTime = 0;
-
-      audio.play().catch(() => {
-        buttons.forEach(b => {
-          b.disabled = false;
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雨穴素材集</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        font-family: sans-serif;
+        background: #f5f5f5;
+      }
+      #loading {
+        text-align: center;
+        font-size: 18px;
+        padding: 30px 10px;
+      }
+      .grid {
+        display: none;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .button {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        font-size: 14px;
+        padding: 8px;
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+      }
+      .button:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+      .button:disabled {
+        opacity: 1;
+        color: black;
+        background: white;
+        cursor: not-allowed;
+      }
+      @media (min-width: 700px) {
+        .grid {
+          max-width: 700px;
+        }
+        .button {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">音声を読み込んでいます……</div>
+    <div class="grid" id="grid"></div>
+    <script>
+      const files = [
+        "mp3/あ、じゃあこれにしましょう.mp3",
+        "mp3/あぁあ！.mp3",
+        "mp3/ありがとうございました.mp3",
+        "mp3/あれぇ.mp3",
+        "mp3/うーん、どこがへんなのかなぁ？.mp3",
+        "mp3/え、お前天才か！？.mp3",
+        "mp3/ここ、なんなんだろう.mp3",
+        "mp3/ここはだってもう、普通に魔界.mp3",
+        "mp3/ここは一度私の知り合いの建築技師さんの栗原さんに電話してみようと思います.mp3",
+        "mp3/これ、なんだろう.mp3",
+        "mp3/これは一発でヤバいとわかりますぅ.mp3",
+        "mp3/じゃあこれはダメでぇ.mp3",
+        "mp3/たしかに冷静に考えたらですけど.mp3",
+        "mp3/どうも皆さんこんばんわ.mp3",
+        "mp3/なんか、ガチヤバいかんじ？.mp3",
+        "mp3/まだなんかあるかんじ？.mp3",
+        "mp3/テレビ置きづらいね.mp3",
+        "mp3/リビング細いね.mp3",
+        "mp3/何かが必要だったってことですかね.mp3",
+        "mp3/僕だって頑張ってるんです！.mp3",
+        "mp3/全部嫌だったみたい.mp3",
+        "mp3/大丈夫ぅ.mp3",
+        "mp3/栗原ぁぁ！.mp3",
+        "mp3/窓無ぁぁい！.mp3",
+        "mp3/窓無いですよ.mp3"
+      ];
+      const grid = document.getElementById("grid");
+      const loading = document.getElementById("loading");
+      const audios = [];
+      let currentAudio = null;
+      function preloadAudio(file) {
+        return new Promise((resolve, reject) => {
+          const audio = new Audio();
+          audio.preload = "auto";
+          audio.addEventListener("canplaythrough", () => {
+            resolve(audio);
+          }, { once: true });
+          audio.addEventListener("error", () => {
+            reject(file);
+          }, { once: true });
+          audio.src = file;
+          audio.load();
         });
-
-        currentAudio = null;
-
-        alert("音声を再生できませんでした。");
+      }
+      Promise.all(
+        files.map(file => preloadAudio(file))
+      )
+      .then(loadedAudios => {
+        loadedAudios.forEach((audio, index) => {
+          audios[index] = audio;
+        });
+        files.forEach((file, index) => {
+          const button = document.createElement("button");
+          button.className = "button";
+          button.textContent = file.replace("mp3/", "").replace(".mp3","");
+          button.addEventListener("click", () => {
+            if (currentAudio !== null) return;
+            const audio = audios[index];
+            currentAudio = audio;
+            const buttons = document.querySelectorAll(".button");
+            buttons.forEach(b => {
+              b.disabled = true;
+            });
+            audio.currentTime = 0;
+            audio.play().catch(() => {
+              buttons.forEach(b => {
+                b.disabled = false;
+              });
+              currentAudio = null;
+              alert("音声を再生できませんでした。");
+            });
+          });
+          audios[index].addEventListener("ended", () => {
+            const buttons = document.querySelectorAll(".button");
+            buttons.forEach(b => {
+              b.disabled = false;
+            });
+            currentAudio = null;
+          });
+          grid.appendChild(button);
+        });
+        loading.style.display = "none";
+        grid.style.display = "grid";
+      })
+      .catch(file => {
+        loading.textContent =
+          "音声の読み込みに失敗しました：" + file;
       });
-    });
-
-    // 再生終了
-    audios[index].addEventListener("ended", () => {
-      const buttons = document.querySelectorAll(".button");
-
-      buttons.forEach(b => {
-        b.disabled = false;
-      });
-
-      currentAudio = null;
-    });
-
-    grid.appendChild(button);
-  });
-
-  // 読み込み表示を消す
-  loading.style.display = "none";
-
-  // ボタンを表示
-  grid.style.display = "grid";
-})
-.catch(file => {
-  loading.textContent =
-    "音声の読み込みに失敗しました：" + file;
-});
-</script>
-
-</body>
+    </script>
+  </body>
 </html>
