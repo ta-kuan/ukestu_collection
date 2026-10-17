@@ -83,7 +83,7 @@ const files = [
 ];
 
 const grid = document.getElementById("grid");
-let audio = null;
+let audio = new Audio(file);
 
 files.forEach((file, index) => {
   const button = document.createElement("button");
